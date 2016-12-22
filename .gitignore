@@ -6,4 +6,4 @@
 *.swp
 
 # Login credential
-logic_credentials.txt
+login_credentials.txt
