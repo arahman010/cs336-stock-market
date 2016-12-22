@@ -1,8 +1,19 @@
+from login import User
 import MySQLdb
 import MySQLdb.cursors
 import json
 #import matplotlib.pyplot as plt
-db = MySQLdb.connect(host="134.74.126.107",user="F16336arahman",passwd="23380510",db="stockmarket",cursorclass=MySQLdb.cursors.DictCursor) #Be sure to change username and password
+
+# Create the user object which has all of the credentials
+user = User()
+
+db = MySQLdb.connect(
+	host="134.74.126.107",
+	user=user.username,
+	passwd=user.password,
+	db="stockmarket",
+	cursorclass=MySQLdb.cursors.DictCursor
+)
 
 cursor = db.cursor()
 
@@ -18,7 +29,7 @@ for stock in stock_history:
 ############## Selecting Stocks to form ETFs ###############################
 # Selected Sectors for ETFs --> Banking, Coputers, Medical, Software.
 
- 
+
 ######################## ETF 1 ############################################
 
 sql = "SELECT DISTINCT(TRADING_SYMBOL) FROM INSTRUMENT WHERE SCND_IDST_CLS_ID = 1 LIMIT 50;"
