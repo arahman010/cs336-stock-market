@@ -1,1 +1,8 @@
+# No python backups that are local to the repo
 *.py~
+*.pyc
+
+# Vim swp files
+*.swp
+
+# Login credential
