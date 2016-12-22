@@ -2,8 +2,8 @@ import os
 
 class User:
     def __init__(self):
-        self.username = None
-        self.password = None
+        self.username = self.get_username()
+        self.password = self.get_password()
 
     # Private variables
     __login_file = "login_credentials.txt"
