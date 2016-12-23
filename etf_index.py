@@ -1,10 +1,10 @@
 class ETFIndex:
 	def __init__(self, cursor):
 		self.cursor = cursor
-		self.trading_symbols = self.get_trading_symbols(cursor)
+		self.trading_symbols = self.get_trading_symbols()
 
 	@classmethod
-	def get_trading_symbols(self, cursor):
+	def get_trading_symbols(self, cursor, industry=7):
 		"""
 		Gets 50 trading symbols from a sql query, these will be used to compute
 		the ETF index
@@ -20,7 +20,7 @@ class ETFIndex:
 		return trade_symbols
 
 	@classmethod
-	def compute_etf_index(cursor, industry):
+	def compute_etf_index(self, cursor, industry):
 		"""
 		:param cursor: mysqldb object
 		:param industry: int
