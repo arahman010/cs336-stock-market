@@ -1,4 +1,6 @@
 from pprint import PrettyPrinter
+import MySQLdb
+import warnings
 
 class ETFIndex:
 	def __init__(self, dbcursor):
@@ -28,15 +30,21 @@ class ETFIndex:
 		Computes the geometric average of 50 stocks to make the ETF index of a particular
 		sector of an industry on a specific date.
 		"""
+
+		# Warning handling
+		warnings.filterwarnings("error", category=MySQLdb.Warning)
+
 		values = []
-		print date
 		for trade_symbol in self.trading_symbols:
-			sql_statement = "select CLOSE_PRICE from STOCK_HISTORY where \
+			try:
+				sql_statement = "select CLOSE_PRICE from STOCK_HISTORY where \
 							TRADING_SYMBOL='%s' and TRADE_DATE='%s';" % (trade_symbol, date)
-			self.cursor.execute(sql_statement)
-			query = self.cursor.fetchone()
-			if query is not None:
-				values.append(float(query["CLOSE_PRICE"]))
+				self.cursor.execute(sql_statement)
+				query = self.cursor.fetchone()
+				if query is not None:
+					values.append(float(query["CLOSE_PRICE"]))
+			except Exception, e:
+				break
 
 		if (debug):
 			pretty_printer = PrettyPrinter(indent=2)
@@ -57,11 +65,12 @@ class ETFIndex:
 		for day in xrange(1, 32):
 			date = "%s-%02d-%02d" % (year, month, day)
 			geometric_mean = self.compute_etf_index(date, False)
-			print geometric_mean
 
-	def compute_yearly_etf(self):
+	def compute_yearly_etf(self, year=2005):
 		"""
-		Computes the etf on a daily basis for an entire year.
+		Computes the etf on a daily basis for an entire year, from months 01-12 (January to December).
 		"""
-		pass
+		for month in xrange(1, 13):
+			print month
+			self.compute_monthly_etf(month, year)
 
