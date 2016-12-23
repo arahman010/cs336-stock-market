@@ -17,85 +17,18 @@ db = MySQLdb.connect(
 
 cursor = db.cursor()
 
-sql = "select * from STOCK_HISTORY order by rand() limit 50;"
-cursor.execute(sql)
-
-stock_history = cursor.fetchall()
-price = []
-for stock in stock_history:
-	price.append(float(stock['OPEN_PRICE']))
-#print(price)
-
-############## Selecting Stocks to form ETFs ###############################
-# Selected Sectors for ETFs --> Banking, Coputers, Medical, Software.
-
-
-######################## ETF 1 ############################################
-
-sql = "SELECT DISTINCT(TRADING_SYMBOL) FROM INSTRUMENT WHERE SCND_IDST_CLS_ID = 1 LIMIT 50;"
-cursor.execute(sql)
-
-stocksNames = cursor.fetchall()
-
-Etf1Stocks = []
-
-for stock in stocksNames:
-	Etf1Stocks.append(str(stock['TRADING_SYMBOL']))
-
-#print(Etf1Stocks)
-
-#print(stocksNames)
-
-######################## ETF 2 ############################################
-
-sql = "SELECT DISTINCT(TRADING_SYMBOL) FROM INSTRUMENT WHERE SCND_IDST_CLS_ID = 3 LIMIT 50;"
-cursor.execute(sql)
-
-stocksNames = cursor.fetchall()
-
-Etf2Stocks = []
-
-for stock in stocksNames:
-        Etf2Stocks.append(str(stock['TRADING_SYMBOL']))
-
-#print(Etf2Stocks)
-
-#print(stocksNames)
+def compute_etf_index(cursor, industry):
+	"""
+	:param cursor: mysqldb object
+	:param industry: int
+	Computes the geometric average of 50 stocks to make the ETF index of a particular
+	sector of an industry.
+	"""
+	# Take 50 trading symbols, this represent the trading symbol
+	sql_statement = "select TRADING_SYMBOL from STOCK_HISTORY where INSTRUMENT_ID in (select INSTRUMENT_ID from INSTRUMENT where SCND_IDST_CLS_ID=%s) order by rand() limit 50;" % (industry)
+	cursor.execute(sql_statement)
+	trading_symbols = cursor.fetchall()
 
 
-######################## ETF 3 ############################################
-
-sql = "SELECT DISTINCT(TRADING_SYMBOL) FROM INSTRUMENT WHERE SCND_IDST_CLS_ID = 8 LIMIT 50;"
-cursor.execute(sql)
-
-stocksNames = cursor.fetchall()
-
-Etf3Stocks = []
-
-for stock in stocksNames:
-        Etf3Stocks.append(str(stock['TRADING_SYMBOL']))
-
-#print(Etf3Stocks)
-
-#print(stocksNames)
-
-
-######################## ETF 4 ############################################
-
-sql = "SELECT DISTINCT(TRADING_SYMBOL) FROM INSTRUMENT WHERE SCND_IDST_CLS_ID = 10 LIMIT 50;"
-cursor.execute(sql)
-
-stocksNames = cursor.fetchall()
-
-Etf4Stocks = []
-
-for stock in stocksNames:
-        Etf4Stocks.append(str(stock['TRADING_SYMBOL']))
-
-#print(Etf4Stocks)
-
-#print(stocksNames)
-
-#plt.plot(price)
-#plt.ylabel('Stock')
-#plt.show()
+if __name__ == "__main__":
+	compute_etf_index(cursor, 7)
