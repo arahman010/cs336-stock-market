@@ -25,7 +25,8 @@ def run():
 	# Create the object which computes the ETFIndex object
 	etf_object = ETFIndex(cursor)
 	print etf_object.trading_symbols
-	print etf_object.compute_etf_index(debug=True)
+	print etf_object.compute_etf_index(etf_object.initial_date, debug=False)
+	etf_object.compute_monthly_etf(2, 2005)
 
 
 if __name__ == "__main__":
