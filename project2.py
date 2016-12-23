@@ -25,6 +25,7 @@ def run():
 	# Create the object which computes the ETFIndex object
 	etf_object = ETFIndex(cursor)
 	print etf_object.trading_symbols
+	print etf_object.compute_etf_index(debug=True)
 
 
 if __name__ == "__main__":
