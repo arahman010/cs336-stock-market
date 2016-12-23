@@ -6,7 +6,7 @@ import json
 #import matplotlib.pyplot as plt
 
 
-def run():
+def run(do_debug=False):
 	"""
 	Main function to run the program.
 	"""
@@ -24,11 +24,13 @@ def run():
 	cursor = db.cursor()
 	# Create the object which computes the ETFIndex object
 	etf_object = ETFIndex(cursor)
+	etf_object.debug = do_debug
+
 	# print etf_object.trading_symbols
-	# print etf_object.compute_etf_index(etf_object.initial_date, debug=False)
-	# etf_object.compute_monthly_etf(2, 2005)
-	etf_object.compute_yearly_etf()
+	# etf_object.compute_etf_index(etf_object.initial_date, debug_list=True)
+	etf_object.compute_monthly_etf(2, 2005)
+	# etf_object.compute_yearly_etf()
 
 
 if __name__ == "__main__":
-	run()
+	run(True)
