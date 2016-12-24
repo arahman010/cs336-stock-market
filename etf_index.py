@@ -89,9 +89,10 @@ class ETFIndex:
 		for month in xrange(2, 13):
 			self.compute_monthly_etf(month, year)
 
-	def compute_time_span_etf(self, start_year, end_year):
+	def compute_time_span_etf(self, start_year, end_year, industry_type=7):
 		"""
-		Computes the etf along a time span reading the initial start year and end year.
+		Computes the etf along a time span reading the initial start year and end year. Function
+		takes in an industry_type in order to allow changes to the query.
 		"""
 		time_span = end_year - start_year
 		for time in xrange(time_span):
@@ -99,6 +100,6 @@ class ETFIndex:
 			year = "%s" % (start_year + time)
 			# After each year randomize the stocks to mimic something similar to the
 			# QQQ etf
-			self.trade_symbols = self.get_trading_symbols()
+			self.trade_symbols = self.get_trading_symbols(industry_type)
 			# Compute the yearly etf for the time span
 			self.compute_yearly_etf(year)
