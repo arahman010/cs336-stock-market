@@ -26,8 +26,9 @@ def run(do_debug=False):
 	etf_object = ETFIndex(cursor)
 	etf_object.debug = do_debug
 
-	# print etf_object.trading_symbols
-	etf_object.compute_etf_index(etf_object.initial_date, debug_list=True)
+	# etf_object.trading_symbols
+	etf_object.get_trading_symbols()
+	# etf_object.compute_etf_index(etf_object.initial_date, debug_list=True)
 	# etf_object.compute_monthly_etf(2, 2005)
 	# etf_object.compute_yearly_etf()
 	# etf_object.compute_time_span_etf(2005, 2015)

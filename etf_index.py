@@ -4,10 +4,10 @@ import warnings
 
 class ETFIndex:
 	def __init__(self, dbcursor):
+		self.debug = False
 		self.initial_date = "2005-08-02"
 		self.cursor = dbcursor
 		self.trading_symbols = self.get_trading_symbols()
-		self.debug = False
 
 	def get_trading_symbols(self, industry=7):
 		"""
@@ -21,7 +21,12 @@ class ETFIndex:
 		query = self.cursor.fetchall()
 		trade_symbols = []
 		for item in query:
-			trade_symbols.append(item["INSTRUMENT_ID"], item["TRADING_SYMBOL"])
+			trade_symbols.append((item["INSTRUMENT_ID"], item["TRADING_SYMBOL"]))
+
+		if (self.debug):
+			pretty_printer = PrettyPrinter(indent=2)
+			pretty_printer.pprint(trade_symbols)
+
 		return trade_symbols
 
 	def compute_etf_index(self, date, debug_list=False):
