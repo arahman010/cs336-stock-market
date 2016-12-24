@@ -76,6 +76,21 @@ class ETFIndex:
 		"""
 		Computes the etf on a daily basis for an entire year, from months 01-12 (January to December).
 		"""
-		for month in xrange(1, 13):
+		# Start in February, since there is no data for January
+		for month in xrange(2, 13):
 			self.compute_monthly_etf(month, year)
+
+	def compute_time_span_etf(self, start_year, end_year):
+		"""
+		Computes the etf along a time span reading the initial start year and end year.
+		"""
+		time_span = end_year - start_year
+		for time in xrange(time_span):
+			# Get the time span to pass as a string
+			year = "%s" % (start_year + time)
+			# After each year randomize the stocks to mimic something similar to the
+			# QQQ etf
+			self.trade_symbols = self.get_trading_symbols()
+			# Compute the yearly etf for the time span
+			self.compute_yearly_etf(start_year)
 
