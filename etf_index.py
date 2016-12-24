@@ -14,14 +14,14 @@ class ETFIndex:
 		Gets 50 trading symbols from a sql query, these will be used to compute
 		the ETF index. By default the sector is INDUSTRIAL from the db.
 		"""
-		sql_statement = "select TRADING_SYMBOL from STOCK_HISTORY where \
+		sql_statement = "select INSTRUMENT_ID, TRADING_SYMBOL from STOCK_HISTORY where \
 						INSTRUMENT_ID in (select INSTRUMENT_ID from INSTRUMENT \
 						where SCND_IDST_CLS_ID=%s) order by rand() limit 50;" % (industry)
 		self.cursor.execute(sql_statement)
 		query = self.cursor.fetchall()
 		trade_symbols = []
 		for item in query:
-			trade_symbols.append(item["TRADING_SYMBOL"])
+			trade_symbols.append(item["INSTRUMENT_ID"], item["TRADING_SYMBOL"])
 		return trade_symbols
 
 	def compute_etf_index(self, date, debug_list=False):
@@ -36,7 +36,7 @@ class ETFIndex:
 		warnings.filterwarnings("error", category=MySQLdb.Warning)
 
 		values = []
-		for trade_symbol in self.trading_symbols:
+		for instrument_id, trade_symbol in self.trading_symbols:
 			try:
 				sql_statement = "select CLOSE_PRICE from STOCK_HISTORY where \
 								TRADING_SYMBOL='%s' and TRADE_DATE='%s';" % (trade_symbol, date)
@@ -48,7 +48,7 @@ class ETFIndex:
 				# Break out of the exception when there is an invalid date, this is to
 				# help speed up the process
 				break
-		
+
 		if (len(values) > 0):
 			geometric_avg = sum(values) ** (float(1) /  len(values))
 
@@ -56,7 +56,7 @@ class ETFIndex:
 				pretty_printer = PrettyPrinter(indent=2)
 				pretty_printer.pprint(values)
 				print "----------------------\nSum: %s, No. of Stocks: %s\nAvg: %06.4f" % (
-						sum(values), 
+						sum(values),
 						len(values),
 						geometric_avg)
 
@@ -65,7 +65,7 @@ class ETFIndex:
 			return geometric_avg
 		else:
 			return None
-	
+
 	def compute_monthly_etf(self, month=8, year=2005):
 		"""
 		Computes the etf on a daily basis on a month to month basis. This iterates through
@@ -97,4 +97,3 @@ class ETFIndex:
 			self.trade_symbols = self.get_trading_symbols()
 			# Compute the yearly etf for the time span
 			self.compute_yearly_etf(year)
-
