@@ -103,3 +103,23 @@ class ETFIndex:
 			self.trade_symbols = self.get_trading_symbols(industry_type)
 			# Compute the yearly etf for the time span
 			self.compute_yearly_etf(year)
+
+
+
+
+	def compute_NAV(self):
+
+	    for symbol in self.trading_symbol:
+	        sql = "select CLOSE_PRICE,VOLUME from STOCK_HISTORY where TRADING_SYMBOL='%s' " % (symbol)
+	        self.cursor.execute(sql)
+	        query = self.cursor.fetchone()
+
+	        asset = float(query["CLOSE_PRICE"])
+	        shares = float(query["VOLUME"])
+
+	        nav = ((asset - asset*0.005)/shares)
+
+	        return nav
+
+
+	        
