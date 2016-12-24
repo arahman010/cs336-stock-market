@@ -3,11 +3,14 @@ import MySQLdb
 import warnings
 
 class ETFIndex:
-	def __init__(self, dbcursor):
+	
+	def __init__(self, dbcursor,name):
+		self.name = name
 		self.debug = False
 		self.initial_date = "2005-08-02"
 		self.cursor = dbcursor
 		self.trading_symbols = self.get_trading_symbols()
+		self.date_and_index = []
 
 	def get_trading_symbols(self, industry=7):
 		"""
@@ -23,9 +26,9 @@ class ETFIndex:
 		for item in query:
 			trade_symbols.append((item["INSTRUMENT_ID"], item["TRADING_SYMBOL"]))
 
-		if (self.debug):
-			pretty_printer = PrettyPrinter(indent=2)
-			pretty_printer.pprint(trade_symbols)
+		#if (self.debug):
+		#	pretty_printer = PrettyPrinter(indent=2)
+		#	pretty_printer.pprint(trade_symbols)
 
 		return trade_symbols
 
@@ -56,7 +59,7 @@ class ETFIndex:
 
 		if (len(values) > 0):
 			geometric_avg = sum(values) ** (float(1) /  len(values))
-
+			'''
 			if (debug_list):
 				pretty_printer = PrettyPrinter(indent=2)
 				pretty_printer.pprint(values)
@@ -64,10 +67,15 @@ class ETFIndex:
 						sum(values),
 						len(values),
 						geometric_avg)
-
+			
 			if (self.debug):
 				print "Date: %s, Geometric Avg: %06.4f" % (date, geometric_avg)
+			'''
+			ret_val = (date,self.name,"{0:.4f}".format(geometric_avg))
+			#print(ret_val)
+			self.date_and_index.append(ret_val)
 			return geometric_avg
+			
 		else:
 			return None
 
@@ -79,7 +87,7 @@ class ETFIndex:
 		monthly_etf_index = []
 		for day in xrange(1, 32):
 			date = "%s-%02d-%02d" % (year, month, day)
-			geometric_mean = self.compute_etf_index(date, False)
+			geometric_mean = self.compute_etf_index(date,False)
 
 	def compute_yearly_etf(self, year=2005):
 		"""
