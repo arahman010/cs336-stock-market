@@ -92,5 +92,5 @@ class ETFIndex:
 			# QQQ etf
 			self.trade_symbols = self.get_trading_symbols()
 			# Compute the yearly etf for the time span
-			self.compute_yearly_etf(start_year)
+			self.compute_yearly_etf(year)
 
