@@ -62,11 +62,9 @@ class ETFIndex:
 				break
 
 		if (len(values) > 0):
-			#print("sumofVal: %f, counter: %06.4f" % (sum(values),len(values))) 	#Debug
 			geometric_avg = mul ** (float(1) /  len(values))			
-			#geometric_avg = sum(values) ** (float(1) /  len(values))
-			#print(geometric_avg) 		#Debug
-			'''
+			
+		
 			if (debug_list):
 				pretty_printer = PrettyPrinter(indent=2)
 				pretty_printer.pprint(values)
@@ -77,7 +75,7 @@ class ETFIndex:
 			
 			if (self.debug):
 				print "Date: %s, Geometric Avg: %06.4f" % (date, geometric_avg)
-			'''
+			
 			date_name_index_tuple = (date,self.name,"{0:.4f}".format(geometric_avg))
 			self.date_name_index.append(date_name_index_tuple)
 			return geometric_avg
