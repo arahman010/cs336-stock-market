@@ -1,9 +1,9 @@
 from login import User
 from etf_index import ETFIndex
+from etf_table import etf_tab
 import MySQLdb
 import MySQLdb.cursors
 import json
-import random
 #import matplotlib.pyplot as plt
 
 
@@ -31,25 +31,18 @@ def run(do_debug=False):
 	# etf_object.trading_symbols
 	trading_symbols = etf_object.get_trading_symbols()
 	#etf_object.compute_etf_index(etf_object.initial_date, debug_list=True)
-	#etf_object.compute_monthly_etf(2, 2005)
+	etf_object.compute_monthly_etf(2, 2005)
 	# etf_object.compute_yearly_etf()
-	etf_object.compute_time_span_etf(2005, 2015)
+	#etf_object.compute_time_span_etf(2005, 2015)
 	
-	sql_statement = "DELETE FROM ETF_RECORDS;"
-	cursor.execute(sql_statement)
-	db.commit()
+	# Create etf-table
+	etf_table1 = etf_tab(etf_object,cursor,db)
+	# Delete Previous Data from Records
+	etf_table1.delete_records()	
+	#Insert new Etf data into Records
+	etf_table1.insert_into_records()
+	#Insert Data into EXCH_TRD_FUND
+	etf_table1.insert_into_etf_table()
 
-	for item in etf_object.date_name_index:
-		sql = "INSERT INTO ETF_RECORDS(TRADE_DATE,TRADING_SYMBOL,ULYING_INDEX) values(%s,%s,%s)"
-		cursor.execute(sql,item)
-		db.commit()	
-	
-	random_stock = (random.choice(trading_symbols))[1]
-	print(random_stock)	
-	#print(dates)
-	
-	sql = "INSERT INTO EXCH_TRD_FUND select SH.INSTRUMENT_ID,SH.TRADE_DATE,ER.TRADING_SYMBOL,SH.OPEN_PRICE,SH.CLOSE_PRICE,ER.ULYING_INDEX,SH.VOLUME from STOCK_HISTORY AS SH INNER JOIN ETF_RECORDS AS ER on SH.TRADE_DATE = ER.TRADE_DATE where SH.TRADING_SYMBOL = %s"
-	cursor.execute(sql,random_stock)
-	db.commit()
 if __name__ == "__main__":
 	run(True)
