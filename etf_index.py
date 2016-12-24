@@ -48,16 +48,20 @@ class ETFIndex:
 				# Break out of the exception when there is an invalid date, this is to
 				# help speed up the process
 				break
-
-		if (debug_list):
-			pretty_printer = PrettyPrinter(indent=2)
-			pretty_printer.pprint(values)
-			print "----------------------\nSum: %s\nAvg: %s" % (sum(values), sum(values) / len(values))
 		
 		if (len(values) > 0):
-			geometric_avg = sum(values) / len(values)
+			geometric_avg = sum(values) ** (float(1) /  len(values))
+
+			if (debug_list):
+				pretty_printer = PrettyPrinter(indent=2)
+				pretty_printer.pprint(values)
+				print "----------------------\nSum: %s, No. of Stocks: %s\nAvg: %06.4f" % (
+						sum(values), 
+						len(values),
+						geometric_avg)
+
 			if (self.debug):
-				print "Date: %s, Geometric Avg: %s" % (date, geometric_avg)
+				print "Date: %s, Geometric Avg: %06.4f" % (date, geometric_avg)
 			return geometric_avg
 		else:
 			return None
