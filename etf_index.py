@@ -109,14 +109,17 @@ class ETFIndex:
 
 	def compute_NAV(self):
 
-    for symbol in self.trading_symbol:
-        sql = "select CLOSE_PRICE,VOLUME from STOCK_HISTORY where TRADING_SYMBOL='%s' " % (symbol)
-        self.cursor.execute(sql)
-        query = self.cursor.fetchone()
+	    for symbol in self.trading_symbol:
+	        sql = "select CLOSE_PRICE,VOLUME from STOCK_HISTORY where TRADING_SYMBOL='%s' " % (symbol)
+	        self.cursor.execute(sql)
+	        query = self.cursor.fetchone()
 
-        asset = float(query["CLOSE_PRICE"])
-        shares = float(query["VOLUME"])
+	        asset = float(query["CLOSE_PRICE"])
+	        shares = float(query["VOLUME"])
 
-        nav = ((asset - asset*0.005)/shares)
+	        nav = ((asset - asset*0.005)/shares)
 
-        return nav
+	        return nav
+
+
+	        
