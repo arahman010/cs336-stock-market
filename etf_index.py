@@ -4,15 +4,16 @@ import warnings
 
 class ETFIndex:
 	
-	def __init__(self, dbcursor,name):
+	def __init__(self, dbcursor,name,idst_id):
 		self.name = name
 		self.debug = False
 		self.initial_date = "2005-08-02"
 		self.cursor = dbcursor
-		self.trading_symbols = self.get_trading_symbols()
+		self.trading_symbols = self.get_trading_symbols(idst_id)
 		self.date_name_index = []
+		self.idst_id = idst_id
 
-	def get_trading_symbols(self, industry=7):
+	def get_trading_symbols(self, industry):
 		"""
 		Gets 50 trading symbols from a sql query, these will be used to compute
 		the ETF index. By default the sector is INDUSTRIAL from the db.
@@ -53,7 +54,7 @@ class ETFIndex:
 				if query is not None:
 					values.append(float(query["CLOSE_PRICE"]))
 		
-				#mul = reduce(lambda x, y: x*y, values,1)	# According to Wiki Geo-mean
+				mul = reduce(lambda x, y: x*y, values,1)	
 
 			except Exception, e:
 				# Break out of the exception when there is an invalid date, this is to
@@ -62,8 +63,8 @@ class ETFIndex:
 
 		if (len(values) > 0):
 			#print("sumofVal: %f, counter: %06.4f" % (sum(values),len(values))) 	#Debug
-			#geometric_avg = mul ** (float(1) /  len(values))			# Trying Geo-mean according to wiki
-			geometric_avg = sum(values) ** (float(1) /  len(values))
+			geometric_avg = mul ** (float(1) /  len(values))			
+			#geometric_avg = sum(values) ** (float(1) /  len(values))
 			#print(geometric_avg) 		#Debug
 			'''
 			if (debug_list):
@@ -115,7 +116,6 @@ class ETFIndex:
 			self.trade_symbols = self.get_trading_symbols(industry_type)
 			# Compute the yearly etf for the time span
 			self.compute_yearly_etf(year)
-
 
 
 
