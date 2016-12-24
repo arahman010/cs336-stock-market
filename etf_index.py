@@ -10,7 +10,7 @@ class ETFIndex:
 		self.initial_date = "2005-08-02"
 		self.cursor = dbcursor
 		self.trading_symbols = self.get_trading_symbols()
-		self.date_and_index = []
+		self.date_name_index = []
 
 	def get_trading_symbols(self, industry=7):
 		"""
@@ -52,13 +52,19 @@ class ETFIndex:
 				query = self.cursor.fetchone()
 				if query is not None:
 					values.append(float(query["CLOSE_PRICE"]))
+		
+				#mul = reduce(lambda x, y: x*y, values,1)	# According to Wiki Geo-mean
+
 			except Exception, e:
 				# Break out of the exception when there is an invalid date, this is to
 				# help speed up the process
 				break
 
 		if (len(values) > 0):
+			#print("sumofVal: %f, counter: %06.4f" % (sum(values),len(values))) 	#Debug
+			#geometric_avg = mul ** (float(1) /  len(values))			# Trying Geo-mean according to wiki
 			geometric_avg = sum(values) ** (float(1) /  len(values))
+			#print(geometric_avg) 		#Debug
 			'''
 			if (debug_list):
 				pretty_printer = PrettyPrinter(indent=2)
@@ -71,11 +77,9 @@ class ETFIndex:
 			if (self.debug):
 				print "Date: %s, Geometric Avg: %06.4f" % (date, geometric_avg)
 			'''
-			ret_val = (date,self.name,"{0:.4f}".format(geometric_avg))
-			#print(ret_val)
-			self.date_and_index.append(ret_val)
+			date_name_index_tuple = (date,self.name,"{0:.4f}".format(geometric_avg))
+			self.date_name_index.append(date_name_index_tuple)
 			return geometric_avg
-			
 		else:
 			return None
 
