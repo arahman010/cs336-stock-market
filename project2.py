@@ -1,6 +1,7 @@
 from login import User
 from etf_index import ETFIndex
 from etf_table import etf_tbl
+from update_etf_table import *
 import MySQLdb
 import MySQLdb.cursors
 import json
@@ -80,28 +81,6 @@ def run(do_debug=False):
 	''' Insert Data into EXCH_TRD_FUND for all etfs with renamed stock's history from STOCK_HISTORY '''
 	insert_into_etf_table(cursor,db,random_stocks)	
 
-
-
-def delete_records(cursor,db):
-	''' Funtion to delete old Records from ETF_RECORDS '''
-	
-	sql_statement = "DELETE FROM ETF_RECORDS;"
-	cursor.execute(sql_statement)
-	db.commit()
-
-def delete_etf_table_data(cursor,db):
-	''' Function to delete old data from EXCH_TRD_FUND '''
-	
-	sql_statement = "DELETE FROM EXCH_TRD_FUND;"
-	cursor.execute(sql_statement)
-	db.commit()	
-
-def insert_into_etf_table(cursor,db,random_stocks):
-	''' Function to insert ETF history with ULYING_INDEX corresponding to each date of STOCK_HISTORY '''
-
-	sql = "INSERT INTO EXCH_TRD_FUND select SH.INSTRUMENT_ID,SH.TRADE_DATE,ER.TRADING_SYMBOL,SH.OPEN_PRICE,SH.CLOSE_PRICE,ER.ULYING_INDEX,SH.VOLUME from STOCK_HISTORY AS SH INNER JOIN ETF_RECORDS AS ER on SH.TRADE_DATE = ER.TRADE_DATE where SH.TRADING_SYMBOL in (%s,%s,%s,%s)"
-	cursor.execute(sql,random_stocks)
-	db.commit()
 
 
 if __name__ == "__main__":

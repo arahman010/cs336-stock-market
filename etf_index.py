@@ -11,6 +11,7 @@ class ETFIndex:
 		self.cursor = dbcursor
 		self.trading_symbols = self.get_trading_symbols(idst_id)
 		self.date_name_index = []
+		self.etf_records = []
 		self.idst_id = idst_id
 
 	def get_trading_symbols(self, industry):
@@ -76,8 +77,8 @@ class ETFIndex:
 			if (self.debug):
 				print "Date: %s, Geometric Avg: %06.4f" % (date, geometric_avg)
 			
-			date_name_index_tuple = (date,self.name,"{0:.4f}".format(geometric_avg))
-			self.date_name_index.append(date_name_index_tuple)
+			self.date_name_index.append(date)
+			self.etf_records.append((date,self.name,"{0:.4f}".format(geometric_avg)))
 			return geometric_avg
 		else:
 			return None
@@ -115,21 +116,6 @@ class ETFIndex:
 			# Compute the yearly etf for the time span
 			self.compute_yearly_etf(year)
 
-
-
-	def compute_NAV(self):
-
-	    for symbol in self.trading_symbol:
-	        sql = "select CLOSE_PRICE,VOLUME from STOCK_HISTORY where TRADING_SYMBOL='%s' " % (symbol)
-	        self.cursor.execute(sql)
-	        query = self.cursor.fetchone()
-
-	        asset = float(query["CLOSE_PRICE"])
-	        shares = float(query["VOLUME"])
-
-	        nav = ((asset - asset*0.005)/shares)
-
-	        return nav
 
 
 	        

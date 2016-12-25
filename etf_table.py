@@ -15,7 +15,7 @@ class etf_tbl:
 		
 	def insert_into_records(self):
 	#  Inserting ETF History in ETF_RECORDS 
-		for item in self.etf.date_name_index:
+		for item in self.etf.etf_records:
 			sql = "INSERT INTO ETF_RECORDS(TRADE_DATE,TRADING_SYMBOL,ULYING_INDEX) values(%s,%s,%s)"
 			self.cursor.execute(sql,item)
 			self.db.commit()
