@@ -3,7 +3,7 @@ import MySQLdb
 import warnings
 
 class ETFIndex:
-	
+
 	def __init__(self, dbcursor,name,idst_id):
 		self.name = name
 		self.debug = False
@@ -28,9 +28,9 @@ class ETFIndex:
 		for item in query:
 			trade_symbols.append((item["INSTRUMENT_ID"], item["TRADING_SYMBOL"]))
 
-		#if (self.debug):
-		#	pretty_printer = PrettyPrinter(indent=2)
-		#	pretty_printer.pprint(trade_symbols)
+		if (self.debug):
+			pretty_printer = PrettyPrinter(indent=2)
+			pretty_printer.pprint(trade_symbols)
 
 		return trade_symbols
 
@@ -54,8 +54,8 @@ class ETFIndex:
 				query = self.cursor.fetchone()
 				if query is not None:
 					values.append(float(query["CLOSE_PRICE"]))
-		
-				mul = reduce(lambda x, y: x*y, values,1)	
+
+				mul = reduce(lambda x, y: x*y, values,1)
 
 			except Exception, e:
 				# Break out of the exception when there is an invalid date, this is to
@@ -63,9 +63,9 @@ class ETFIndex:
 				break
 
 		if (len(values) > 0):
-			geometric_avg = mul ** (float(1) /  len(values))			
-			
-		
+			geometric_avg = mul ** (float(1) /  len(values))
+
+
 			if (debug_list):
 				pretty_printer = PrettyPrinter(indent=2)
 				pretty_printer.pprint(values)
@@ -73,10 +73,10 @@ class ETFIndex:
 						sum(values),
 						len(values),
 						geometric_avg)
-			
+
 			if (self.debug):
 				print "Date: %s, Geometric Avg: %06.4f" % (date, geometric_avg)
-			
+
 			self.date_name_index.append(date)
 			self.etf_records.append((date,self.name,"{0:.4f}".format(geometric_avg)))
 			return geometric_avg
@@ -92,6 +92,8 @@ class ETFIndex:
 		for day in xrange(1, 32):
 			date = "%s-%02d-%02d" % (year, month, day)
 			geometric_mean = self.compute_etf_index(date,False)
+			monthly_etf_index.append((date, geometric_mean))
+		return monthly_etf_index
 
 	def compute_yearly_etf(self, year=2005):
 		"""
@@ -115,7 +117,3 @@ class ETFIndex:
 			self.trade_symbols = self.get_trading_symbols(industry_type)
 			# Compute the yearly etf for the time span
 			self.compute_yearly_etf(year)
-
-
-
-	        
