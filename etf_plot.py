@@ -1,7 +1,6 @@
 import MySQLdb
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import numpy as np
 
 def plot(cursor):
 	for etf_name in ["IND","PHA","MED","FIN"]:
@@ -15,9 +14,16 @@ def plot(cursor):
 			date.append(item['TRADE_DATE'])
 			value.append(float(item['CLOSE_PRICE']))
 			index.append(float(item['ULYING_INDEX']))
-		#print(value,index,nav,date)
+
+		plt.figure().suptitle('bold figure suptitle', fontsize=14, fontweight='bold')
+		ax = plt.figure().add_subplot(111)
+		plt.figure().subplots_adjust(top=0.85)
+		ax.set_title('axes title')
+
+		ax.set_xlabel('xlabel')
+		ax.set_ylabel('ylabel')
+
 		plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d/%Y'))
-		#plt.gca().xaxis.set_major_locator(mdates.DayLocator())
 		plt.plot(date, value)
 		plt.plot(date, index)
 		plt.show()
