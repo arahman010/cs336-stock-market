@@ -22,7 +22,12 @@ def plot(cursor):
 		ax.set_title(etf_name)
 		ax.set_xlabel('Trade Date')
 		ax.set_ylabel('Value/Index')
-
+		plt.annotate('Value', 
+             		xy=(date[5000], value[1000]), xytext=(date[5300], value[1000]+50),
+			arrowprops=dict(facecolor='black', shrink=0.05))  
+		plt.annotate('Index', 
+	     		xy=(date[2000], index[1000]), xytext=(date[2300], value[1000]+50),
+	     		arrowprops=dict(facecolor='black', shrink=0.05))
 		plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d/%Y'))
 		plt.plot(date, value)
 		plt.plot(date, index)
