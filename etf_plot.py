@@ -14,14 +14,14 @@ def plot(cursor):
 			date.append(item['TRADE_DATE'])
 			value.append(float(item['CLOSE_PRICE']))
 			index.append(float(item['ULYING_INDEX']))
-
-		plt.figure().suptitle('bold figure suptitle', fontsize=14, fontweight='bold')
-		ax = plt.figure().add_subplot(111)
-		plt.figure().subplots_adjust(top=0.85)
-		ax.set_title('axes title')
-
-		ax.set_xlabel('xlabel')
-		ax.set_ylabel('ylabel')
+		
+		fig = plt.figure()
+		fig.suptitle('Exchange-Traded Fund', fontsize=14, fontweight='bold')
+		ax = fig.add_subplot(111)
+		fig.subplots_adjust(top=0.85)
+		ax.set_title(etf_name)
+		ax.set_xlabel('Trade Date')
+		ax.set_ylabel('Value/Index')
 
 		plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d/%Y'))
 		plt.plot(date, value)
